@@ -27,8 +27,7 @@ class Student {
         if (marks >= 90) return "A";
         else if (marks >= 75) return "B";
         else if (marks >= 60) return "C";
-        else if (marks >= 40) return "D";
-        else return "F";
+        else return "D"; // changed: marks < 60 now grade D (no F)
     }
 
     @Override
@@ -45,17 +44,17 @@ class StudentService {
     public void addStudent(Student s) {
         for (Student st : students) {
             if (st.getId() == s.getId()) {
-                System.out.println("❌ Student with this ID already exists!");
+                System.out.println("Student with this ID already exists!");
                 return;
             }
         }
         students.add(s);
-        System.out.println("✅ Student added successfully!");
+        System.out.println("Student added successfully!");
     }
 
     public void viewAll() {
         if (students.isEmpty()) {
-            System.out.println("❌ No students found!");
+            System.out.println("No students found!");
             return;
         }
         for (Student s : students) {
@@ -94,7 +93,7 @@ public class SMS {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         StudentService service = new StudentService();
-        int choice;
+        int choice = -1;
 
         do {
             System.out.println("\n===== Student Management System =====");
@@ -104,19 +103,38 @@ public class SMS {
             System.out.println("4. Delete Student");
             System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
+
+            if (!sc.hasNextInt()) {
+                System.out.println(" Invalid choice! Please enter a number between 1 and 5.");
+                sc.nextLine(); // clear invalid input
+                continue;
+            }
             choice = sc.nextInt();
 
             switch (choice) {
                 case 1:
                     System.out.print("Enter ID: ");
+                    while (!sc.hasNextInt()) {
+                        System.out.print("Please enter a valid integer ID: ");
+                        sc.nextLine();
+                    }
                     int id = sc.nextInt();
                     sc.nextLine();
                     System.out.print("Enter Name: ");
                     String name = sc.nextLine();
                     System.out.print("Enter Age: ");
+                    while (!sc.hasNextInt()) {
+                        System.out.print("Please enter a valid integer Age: ");
+                        sc.nextLine();
+                    }
                     int age = sc.nextInt();
                     System.out.print("Enter Marks: ");
+                    while (!sc.hasNextDouble()) {
+                        System.out.print("Please enter valid numeric Marks: ");
+                        sc.nextLine();
+                    }
                     double marks = sc.nextDouble();
+                    sc.nextLine();
                     service.addStudent(new Student(id, name, age, marks));
                     break;
 
@@ -126,20 +144,38 @@ public class SMS {
 
                 case 3:
                     System.out.print("Enter ID to update: ");
+                    while (!sc.hasNextInt()) {
+                        System.out.print("Please enter a valid integer ID: ");
+                        sc.nextLine();
+                    }
                     int uid = sc.nextInt();
                     sc.nextLine();
                     System.out.print("Enter New Name: ");
                     String uname = sc.nextLine();
                     System.out.print("Enter New Age: ");
+                    while (!sc.hasNextInt()) {
+                        System.out.print("Please enter a valid integer Age: ");
+                        sc.nextLine();
+                    }
                     int uage = sc.nextInt();
                     System.out.print("Enter New Marks: ");
+                    while (!sc.hasNextDouble()) {
+                        System.out.print("Please enter valid numeric Marks: ");
+                        sc.nextLine();
+                    }
                     double umarks = sc.nextDouble();
+                    sc.nextLine();
                     service.updateStudent(uid, uname, uage, umarks);
                     break;
 
                 case 4:
                     System.out.print("Enter ID to delete: ");
+                    while (!sc.hasNextInt()) {
+                        System.out.print("Please enter a valid integer ID: ");
+                        sc.nextLine();
+                    }
                     int did = sc.nextInt();
+                    sc.nextLine();
                     service.deleteStudent(did);
                     break;
 
@@ -149,11 +185,10 @@ public class SMS {
 
                 default:
                     System.out.println(" Invalid choice! Please try again.");
-                
-                sc.close();
+                    break;
             }
         } while (choice != 5);
 
-       
+        sc.close();
     }
 }
